@@ -122,6 +122,13 @@ KISSY.add("brix/core/chunk", function(S, Node, UA, Base, Dataset, Tmpler) {
          */
         dataset: {
             value: false
+        },
+        /**
+         * 子模板解析的层级
+         * @cfg {Number}
+         */
+        level:{
+            value:3
         }
     };
 
@@ -136,7 +143,7 @@ KISSY.add("brix/core/chunk", function(S, Node, UA, Base, Dataset, Tmpler) {
             if(!tmpler) {
                 var tmpl = self.get('tmpl');
                 if(tmpl) {
-                    tmpler = new Tmpler(tmpl);
+                    tmpler = new Tmpler(tmpl,self.get('level'));
                     self.set('tmpler', tmpler);
                     if(tmpler.inDom) {
                         self.set('el', tmpl);
