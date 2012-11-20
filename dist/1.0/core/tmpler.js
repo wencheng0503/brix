@@ -46,14 +46,15 @@ KISSY.add("brix/core/tmpler", function(S, Mustache,Node) {
             }
 
             if(!inDom) {
-                var r = '<([\\w]+)\\s+[^>]*?bx-tmpl="([^"]+?)"[^>]*?bx-datakey="([^"]+?)"[^>]*?>(@brix@)</\\1>';
+                level = 3;
+                var r = '<([\\w]+)\\s+[^>]*?bx-tmpl=["\']?([^"\'\\s]+?)["\']?\\s+[^>]*?bx-datakey=["\']?([^"\'\\s]+)["\']?[^>]*?>(@brix@)</\\1>';
                 while(level--){
                     r = r.replace('@brix@','(?:<\\1[^>]*>@brix@</\\1>|[\\s\\S])*?');
                 }
                 r = r.replace('@brix@','(?:[\\s\\S]*?)');
                 self.reg = r;
                 S.log(r);
-                self.tmpl = self._replaceTmpl(tmpl);
+                self.tmpl = tmpl;
                 self._buildTmpls(self.tmpl);
             }
             self.inDom = inDom;
@@ -65,7 +66,7 @@ KISSY.add("brix/core/tmpler", function(S, Mustache,Node) {
          */
         _buildTmpls: function(tmpl) {
             var self = this;
-            tmpl = self._replaceTmpl(tmpl);
+            //tmpl = self._replaceTmpl(tmpl);
             var r = new RegExp(self.reg,"ig");
             while((m = r.exec(tmpl)) !== null) {
                 self.tmpls.push({
