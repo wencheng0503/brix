@@ -50,7 +50,6 @@ KISSY.add("brix/core/chunk", function(S, Node, UA, RichBase, Dataset, Tmpler) {
         syncInternal: noop,
         /**
          * 初始化
-         * @return {[type]} [description]
          */
         initializer: function () {
             var self = this;

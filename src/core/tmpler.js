@@ -17,7 +17,7 @@ KISSY.add("brix/core/tmpler", function(S, XTemplate,Node) {
         }
     }
 
-    S.extend(Tmpler, Object, {
+    S.augment(Tmpler, {
         /**
          * 解析模板
          * @param  {String} tmpl  模板字符串

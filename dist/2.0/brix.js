@@ -20,7 +20,7 @@ KISSY.add("brix/core/tmpler", function(S, XTemplate,Node) {
         }
     }
 
-    S.extend(Tmpler, Object, {
+    S.augment(Tmpler, {
         /**
          * 解析模板
          * @param  {String} tmpl  模板字符串
@@ -234,7 +234,6 @@ KISSY.add("brix/core/chunk", function(S, Node, UA, RichBase, Dataset, Tmpler) {
         syncInternal: noop,
         /**
          * 初始化
-         * @return {[type]} [description]
          */
         initializer: function () {
             var self = this;
@@ -782,7 +781,6 @@ KISSY.add("brix/core/brick", function(S, Chunk,Event) {
             if(self.get('pagelet')){
                 self.set('pagelet',null);
             }
-            self.detach();
         }
     },{
         ATTRS:{
