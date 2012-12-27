@@ -1,44 +1,44 @@
-<!DOCTYPE HTML>
-<html lang="en-US">
-<head>
-    <meta charset="UTF-8">
-    <title>brix tmpl test</title>
-    <script src="http://a.tbcdn.cn/s/kissy/1.3.0/seed.js"></script>
-</head>
-<body>
-    <div class="container">
-    </div>
-    <script type="text/javascript">
-    var list = {
-        a: true,
-        b: function(){return 'b'},
-        c: [1,2,3],
-        data: {
-                name: 'h',
-                age: 2
-            }
-    }
-    KISSY.ready(function(S){
-        S.use('xtemplate,node',function(S,XTemplate){
-            S.one('.container').html(new XTemplate(S.one('#tmpl').html()).render(list));
-        });
-    })
-    </script>
-    <script type="text/tmpl" id="tmpl">
-        <div>
-            <h1>不支持true，false的判断</h1>
-            {{#a}}<div>true</div>{{/a}}
-
-            <h1>不支持function</h1>
-            <div>{{{b}}}</div>
-            
-            <h1>不支持Array</h1>
-            {{#c}}
-            <div>{{.}}</div>
-            {{/c}}
-            <h1>不支持属性向上查找判断</h1>
-            {{#data}}{{name}}-{{b}}-{{age}}{{/data}}
+    <!DOCTYPE HTML>
+    <html lang="en-US">
+    <head>
+        <meta charset="UTF-8">
+        <title>brix tmpl test</title>
+        <script src="http://a.tbcdn.cn/s/kissy/1.3.0/seed.js"></script>
+    </head>
+    <body>
+        <div class="container">
         </div>
-    </script>
-</body>
-</html>
+        <script type="text/javascript">
+        var list = {
+            a: true,
+            b: function(){return 'b'},
+            c: [1,2,3],
+            data: {
+                    name: 'h',
+                    age: 2
+                }
+        }
+        KISSY.ready(function(S){
+            S.use('xtemplate,node',function(S,XTemplate){
+                S.one('.container').html(new XTemplate(S.one('#tmpl').html()).render(list));
+            });
+        })
+        </script>
+        <script type="text/tmpl" id="tmpl">
+            <div>
+                <h1>不支持true，false的判断</h1>
+                {{#a}}<div>true</div>{{/a}}
+
+                <h1>不支持function</h1>
+                <div>{{{b}}}</div>
+                
+                <h1>不支持Array</h1>
+                {{#c}}
+                <div>{{.}}</div>
+                {{/c}}
+                <h1>不支持属性向上查找判断</h1>
+                {{#data}}{{name}}-{{b}}-{{age}}{{/data}}
+            </div>
+        </script>
+    </body>
+    </html>
