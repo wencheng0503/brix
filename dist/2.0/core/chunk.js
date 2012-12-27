@@ -1,6 +1,6 @@
 KISSY.add("brix/core/chunk", function(S, Node, UA, RichBase, Dataset, Tmpler) {
     var $ = Node.all,
-        noop = S.noop; 
+        noop = S.noop;
     /**
      * The default set of attributes which will be available for instances of this class, and
      * their configuration
@@ -38,7 +38,7 @@ KISSY.add("brix/core/chunk", function(S, Node, UA, RichBase, Dataset, Tmpler) {
             var self = this;
             Chunk.superclass.constructor.apply(self, arguments);
             var tmpler = self.get('tmpler');
-            if (self.get('autoRender')||!tmpler||tmpler.inDom) {
+            if(self.get('autoRender') || !tmpler || tmpler.inDom) {
                 self.render();
             }
         },
@@ -51,7 +51,7 @@ KISSY.add("brix/core/chunk", function(S, Node, UA, RichBase, Dataset, Tmpler) {
         /**
          * 初始化
          */
-        initializer: function () {
+        initializer: function() {
             var self = this;
             var tmpl = self.get('tmpl');
             if(tmpl) {
@@ -146,7 +146,7 @@ KISSY.add("brix/core/chunk", function(S, Node, UA, RichBase, Dataset, Tmpler) {
             var self = this;
             self._buildTmpler('', false);
             self._buildDataset();
-            if(name){
+            if(name) {
                 var tmpler = self.get('tmpler');
                 tmpler.addTmpl(name, datakey, tmpl);
             }
@@ -231,7 +231,7 @@ KISSY.add("brix/core/chunk", function(S, Node, UA, RichBase, Dataset, Tmpler) {
                  */
 
                 self.fire('afterSyncUI');
-                
+
             }
             return self;
         },
@@ -365,97 +365,97 @@ KISSY.add("brix/core/chunk", function(S, Node, UA, RichBase, Dataset, Tmpler) {
                 }
             });
         }
-    },{
-    ATTRS : {
-        /**
-         * 组件节点
-         * @cfg {String}
-         */
-        el: {
-            getter: function(s) {
-                if(S.isString(s)) {
-                    s = $(s);
+    }, {
+        ATTRS: {
+            /**
+             * 组件节点
+             * @cfg {String}
+             */
+            el: {
+                getter: function(s) {
+                    if(S.isString(s)) {
+                        s = $(s);
+                    }
+                    return s;
                 }
-                return s;
-            }
-        },
-        /**
-         * 在销毁的时候是否移除HTML，默认true
-         * @cfg {Object}
-         */
-        isRemoveHTML: {
-            value: true
-        },
-        /**
-         * 在销毁的时候是否移除本身，默认true
-         * @cfg {Object}
-         */
-        isRemoveEl: {
-            value: true
-        },
-        /**
-         * 容器节点
-         * @cfg {String}
-         */
-        container: {
-            value: 'body',
-            getter: function(s) {
-                if(S.isString(s)) {
-                    s = $(s);
+            },
+            /**
+             * 在销毁的时候是否移除HTML，默认true
+             * @cfg {Object}
+             */
+            isRemoveHTML: {
+                value: true
+            },
+            /**
+             * 在销毁的时候是否移除本身，默认true
+             * @cfg {Object}
+             */
+            isRemoveEl: {
+                value: true
+            },
+            /**
+             * 容器节点
+             * @cfg {String}
+             */
+            container: {
+                value: 'body',
+                getter: function(s) {
+                    if(S.isString(s)) {
+                        s = $(s);
+                    }
+                    return s;
                 }
-                return s;
+            },
+            /**
+             * 模板代码，如果是已经渲染的html元素，则提供渲染html容器节点选择器
+             * @cfg {String}
+             */
+            tmpl: {
+                value: false
+            },
+            /**
+             * 解析后的模板对象
+             * @type {Brix.Tmpler}
+             */
+            tmpler: {
+                value: false
+            },
+            /**
+             * 是否已经渲染
+             * @type {Boolean}
+             */
+            rendered: {
+                value: false
+            },
+            /**
+             * 是否自动渲染
+             * @cfg {Boolean}
+             */
+            autoRender: {
+                value: true
+            },
+            /**
+             * 模板数据
+             * @cfg {Object}
+             */
+            data: {
+                value: false
+            },
+            /**
+             * 解析后的数据对象
+             * @type {Brix.Dataset}
+             */
+            dataset: {
+                value: false
+            },
+            /**
+             * 子模板解析的层级
+             * @cfg {Number}
+             */
+            level: {
+                value: 3
             }
-        },
-        /**
-         * 模板代码，如果是已经渲染的html元素，则提供渲染html容器节点选择器
-         * @cfg {String}
-         */
-        tmpl: {
-            value: false
-        },
-        /**
-         * 解析后的模板对象
-         * @type {Brix.Tmpler}
-         */
-        tmpler: {
-            value: false
-        },
-        /**
-         * 是否已经渲染
-         * @type {Boolean}
-         */
-        rendered: {
-            value: false
-        },
-        /**
-         * 是否自动渲染
-         * @cfg {Boolean}
-         */
-        autoRender: {
-            value: true
-        },
-        /**
-         * 模板数据
-         * @cfg {Object}
-         */
-        data: {
-            value: false
-        },
-        /**
-         * 解析后的数据对象
-         * @type {Brix.Dataset}
-         */
-        dataset: {
-            value: false
-        },
-        /**
-         * 子模板解析的层级
-         * @cfg {Number}
-         */
-        level: {
-            value: 3
         }
-    }
     });
     return Chunk;
 }, {

@@ -1,4 +1,4 @@
-KISSY.add("brix/core/tmpler", function(S, XTemplate,Node) {
+KISSY.add("brix/core/tmpler", function(S, XTemplate, Node) {
     var $ = Node.all;
     /**
      * 模板解析器，对传入的模板通过钩子进行分析，结合 XTemplate 和数据给出 html 片段。
@@ -11,7 +11,7 @@ KISSY.add("brix/core/tmpler", function(S, XTemplate,Node) {
     function Tmpler(tmpl, level) {
         this.tmpls = [];
         if(tmpl && (level !== false)) {
-            this._praseTmpl(tmpl,level);
+            this._praseTmpl(tmpl, level);
         } else {
             this.tmpl = tmpl;
         }
@@ -24,7 +24,7 @@ KISSY.add("brix/core/tmpler", function(S, XTemplate,Node) {
          * @param  {Number} level 对模板进行解析的层级，false表示不解析
          * @private
          */
-        _praseTmpl: function(tmpl,level) {
+        _praseTmpl: function(tmpl, level) {
             var self = this,
                 inDom = false,
                 node, tmplNode;
@@ -47,10 +47,10 @@ KISSY.add("brix/core/tmpler", function(S, XTemplate,Node) {
 
             if(!inDom) {
                 var r = '<([\\w]+)\\s+[^>]*?bx-tmpl=["\']?([^"\'\\s]+)["\']?\\s+[^>]*?bx-datakey=["\']?([^"\'\\s]+)["\']?[^>]*?>(@brix@)</\\1>';
-                while(level--){
-                    r = r.replace('@brix@','(?:<\\1[^>]*>@brix@</\\1>|[\\s\\S])*?');
+                while(level--) {
+                    r = r.replace('@brix@', '(?:<\\1[^>]*>@brix@</\\1>|[\\s\\S])*?');
                 }
-                r = r.replace('@brix@','(?:[\\s\\S]*?)');
+                r = r.replace('@brix@', '(?:[\\s\\S]*?)');
                 self.reg = r;
                 //S.log(r);
                 self.tmpl = self._replaceTmpl(tmpl);
@@ -65,7 +65,8 @@ KISSY.add("brix/core/tmpler", function(S, XTemplate,Node) {
          */
         _buildTmpls: function(tmpl) {
             var self = this;
-            var r = new RegExp(self.reg,"ig"),m;
+            var r = new RegExp(self.reg, "ig"),
+                m;
             while((m = r.exec(tmpl)) !== null) {
                 self.tmpls.push({
                     name: m[2],
@@ -85,10 +86,10 @@ KISSY.add("brix/core/tmpler", function(S, XTemplate,Node) {
             //return tmpl;
             var r = /<!--bx-tmpl="([^"]+?)"\s+bx-datakey="([^"]+?)"-->(\s*([\s\S]*)?\s*)<!--bx-tmpl="\1"-->/g,
                 m;
-            var foo = function(i, j, k, l){
-                S.log(i+','+l);
-                return l;
-            };
+            var foo = function(i, j, k, l) {
+                    S.log(i + ',' + l);
+                    return l;
+                };
             while(r.test(tmpl)) {
                 tmpl = tmpl.replace(r, foo);
                 r.lastIndex = 0;
@@ -129,5 +130,5 @@ KISSY.add("brix/core/tmpler", function(S, XTemplate,Node) {
     });
     return Tmpler;
 }, {
-    requires: ['xtemplate','node', 'sizzle']
+    requires: ['xtemplate', 'node', 'sizzle']
 });

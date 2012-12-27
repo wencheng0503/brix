@@ -1,4 +1,4 @@
-KISSY.add("brix/core/brick", function(S, Chunk,Event) {
+KISSY.add("brix/core/brick", function(S, Chunk, Event) {
     /**
      * Brix Brick 组件基类，完成组件渲染后的事件代理（既行为）。
      * initialize是组件在渲染后的初始化方法，destructor是析构方法
@@ -6,19 +6,19 @@ KISSY.add("brix/core/brick", function(S, Chunk,Event) {
      * @class Brix.Brick
      */
     var Brick = Chunk.extend({
-        initializer:function(){
+        initializer: function() {
             var self = this,
                 constt = self.constructor;
-            while(constt){
+            while(constt) {
                 var renderers = constt.RENDERERS;
-                if (renderers) {
+                if(renderers) {
                     self.addTmpl();
                     self.get('dataset').setRenderer(renderers, self);
                 }
                 constt = constt.superclass && constt.superclass.constructor;
             }
         },
-        bindUI:function(){
+        bindUI: function() {
             var self = this;
             self._bindEvent();
         },
@@ -30,20 +30,20 @@ KISSY.add("brix/core/brick", function(S, Chunk,Event) {
             var self = this;
             var constt = self.constructor;
 
-            while(constt){
+            while(constt) {
                 var defaultEvents = constt.EVENTS;
-                if (defaultEvents) {
+                if(defaultEvents) {
                     self._removeEvents(defaultEvents);
                 }
                 var defaultDocEvents = constt.DOCEVENTS;
-                if (defaultDocEvents) {
+                if(defaultDocEvents) {
                     self._removeEvents(defaultDocEvents, document);
                 }
                 constt = constt.superclass && constt.superclass.constructor;
             }
             self._undelegateEvents();
             var events = self.get("events");
-            if (events) {
+            if(events) {
                 this._removeEvents(events);
             }
         },
@@ -54,16 +54,16 @@ KISSY.add("brix/core/brick", function(S, Chunk,Event) {
         _bindEvent: function() {
             var self = this;
             var constt = self.constructor;
-            while(constt){
+            while(constt) {
                 //组件默认事件代理
                 //方式一
                 var defaultEvents = constt.EVENTS;
-                if (defaultEvents) {
+                if(defaultEvents) {
                     this._addEvents(defaultEvents);
                 }
                 //代理在全局的页面上
                 var defaultDocEvents = constt.DOCEVENTS;
-                if (defaultDocEvents) {
+                if(defaultDocEvents) {
                     this._addEvents(defaultDocEvents, document);
                 }
                 constt = constt.superclass && constt.superclass.constructor;
@@ -72,7 +72,7 @@ KISSY.add("brix/core/brick", function(S, Chunk,Event) {
 
             //用户使用组件中的自定义事件代理
             var events = self.get("events");
-            if (events) {
+            if(events) {
                 this._addEvents(events);
             }
         },
@@ -83,14 +83,14 @@ KISSY.add("brix/core/brick", function(S, Chunk,Event) {
          */
         _removeEvents: function(events, el) {
             el = el || this.get("el");
-            for (var selector in events) {
+            for(var selector in events) {
                 var es = events[selector];
-                for (var type in es) {
+                for(var type in es) {
                     var callback = es[type];
-                    if (selector === "") {
-                        Event.detach(el,type, callback, this);
+                    if(selector === "") {
+                        Event.detach(el, type, callback, this);
                     } else {
-                        Event.undelegate(el,type, selector, callback, this);
+                        Event.undelegate(el, type, selector, callback, this);
                     }
                 }
             }
@@ -102,14 +102,14 @@ KISSY.add("brix/core/brick", function(S, Chunk,Event) {
          */
         _addEvents: function(events, el) {
             el = el || this.get("el");
-            for (var selector in events) {
+            for(var selector in events) {
                 var es = events[selector];
-                for (var type in es) {
+                for(var type in es) {
                     var callback = es[type];
-                    if (selector === "") {
-                        Event.on(el,type, callback, this);
+                    if(selector === "") {
+                        Event.on(el, type, callback, this);
                     } else {
-                        Event.delegate(el,type, selector, callback, this);
+                        Event.delegate(el, type, selector, callback, this);
                     }
                 }
             }
@@ -117,28 +117,27 @@ KISSY.add("brix/core/brick", function(S, Chunk,Event) {
         /**
          * 销毁组件
          */
-        destructor:function(){
+        destructor: function() {
             var self = this;
             if(self.get('rendered')) {
                 self._detachEvent();
-                if(self.get('isRemoveHTML')){
+                if(self.get('isRemoveHTML')) {
                     var el = self.get('el');
-                    if(self.get('isRemoveEl')){
+                    if(self.get('isRemoveEl')) {
                         el.remove();
-                    }
-                    else{
+                    } else {
                         el.empty();
                     }
                 }
             }
-            if(self.get('pagelet')){
-                self.set('pagelet',null);
+            if(self.get('pagelet')) {
+                self.set('pagelet', null);
             }
         }
-    },{
-        ATTRS:{
-            pagelet:{
-                value:null
+    }, {
+        ATTRS: {
+            pagelet: {
+                value: null
             }
         }
     });
@@ -153,39 +152,39 @@ KISSY.add("brix/core/brick", function(S, Chunk,Event) {
 
     /**
      * 对外方法配置
-     * 
+     *
      *
      *      Brick.METHODS = {
      *          method1:function(){
-     *                  
+     *
      *          }
      *      }
      *      S.augment(Brick, Brick.METHODS)
-     *      
+     *
      *
      * @property METHODS
      * @static
      * @type {Object}
      */
-    
+
     /**
      * 节点代理事件
-     * 
+     *
      *
      *      Brick.EVENTS = {
      *          'selector':{
      *              'eventtype':function(){
-     *                  
+     *
      *               }
      *           }
      *      }
-     *      
+     *
      *
      * @property EVENTS
      * @static
      * @type {Object}
      */
-    
+
     /**
      * DOCUMENT节点代理事件
      *
@@ -193,17 +192,17 @@ KISSY.add("brix/core/brick", function(S, Chunk,Event) {
      *      Brick.DOCEVENTS = {
      *          'selector':{
      *              'eventtype':function(){
-     *                  
+     *
      *               }
      *           }
      *      }
-     *      
+     *
      *
      * @property DOCEVENTS
      * @static
      * @type {Object}
      */
-    
+
     /**
      * 对外事件申明
      *
@@ -211,13 +210,13 @@ KISSY.add("brix/core/brick", function(S, Chunk,Event) {
      *      Brick.FIRES = {
      *          'selector':'selector'
      *      }
-     *      
+     *
      *
      * @property FIRES
      * @static
      * @type {Object}
      */
-    
+
     /**
      * 模板数据渲染扩展
      *
@@ -225,11 +224,11 @@ KISSY.add("brix/core/brick", function(S, Chunk,Event) {
      *      Brick.RENDERERS = {
      *          'xx':{
      *              'yy'function(){
-     *              
+     *
      *              }
      *          }
      *      }
-     *      
+     *
      *
      * @property RENDERERS
      * @static
@@ -237,5 +236,5 @@ KISSY.add("brix/core/brick", function(S, Chunk,Event) {
      */
     return Brick;
 }, {
-    requires: ["./chunk","event"]
+    requires: ["./chunk", "event"]
 });

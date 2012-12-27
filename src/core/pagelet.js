@@ -8,9 +8,9 @@ KISSY.add("brix/core/pagelet", function(S, Chunk) {
      */
 
     function _stamp(el) {
-        if (!el.attr('id')) {
+        if(!el.attr('id')) {
             var id;
-            while(id = S.guid('brix_brick_')&&!S.one('#'+id)){
+            while(id = S.guid('brix_brick_') && !S.one('#' + id)) {
                 el.attr('id', id);
             }
         }
@@ -24,7 +24,7 @@ KISSY.add("brix/core/pagelet", function(S, Chunk) {
      * @class Brix.Pagelet
      */
     var Pagelet = Chunk.extend({
-        initializer:function(){
+        initializer: function() {
             var self = this;
             //初始化属性
             self.isReady = false;
@@ -32,15 +32,15 @@ KISSY.add("brix/core/pagelet", function(S, Chunk) {
             self.bricks = [];
             self.isAddBehavior = false;
         },
-        bindUI:function(){
+        bindUI: function() {
             //增加参数回调
             var self = this;
             var callback = self.get('callback');
-            if(callback&&typeof callback === 'function'){
+            if(callback && typeof callback === 'function') {
                 self.ready(callback);
             }
             //自动添加行为渲染
-            if(self.get('autoBehavior')){
+            if(self.get('autoBehavior')) {
                 self.addBehavior();
             }
         },
@@ -53,20 +53,20 @@ KISSY.add("brix/core/pagelet", function(S, Chunk) {
             var self = this,
                 brick;
             S.each(self.bricks, function(b) {
-                if (b.id === id) {
+                if(b.id === id) {
                     brick = b.brick;
                     return false;
                 }
             });
             return brick || null;
         },
-        destroyBrick:function(id){
+        destroyBrick: function(id) {
             var self = this;
-            for (var i = 0; i < self.bricks.length; i++) {
+            for(var i = 0; i < self.bricks.length; i++) {
                 var o = self.bricks[i];
-                if(id===o.id){
+                if(id === o.id) {
                     self._destroyBrick(o);
-                    self.bricks.splice(i,1);
+                    self.bricks.splice(i, 1);
                     return false;
                 }
             }
@@ -77,8 +77,8 @@ KISSY.add("brix/core/pagelet", function(S, Chunk) {
          * @private
          */
         _destroyBrick: function(o) {
-            if (o.brick) {
-                o.brick.destroy&&o.brick.destroy();
+            if(o.brick) {
+                o.brick.destroy && o.brick.destroy();
                 o.brick = null;
             }
         },
@@ -87,24 +87,24 @@ KISSY.add("brix/core/pagelet", function(S, Chunk) {
          */
         addBehavior: function() {
             var self = this;
-            if (self.get('rendered')&&!self.isAddBehavior) {
+            if(self.get('rendered') && !self.isAddBehavior) {
                 self.isAddBehavior = true;
                 var el = self.get('el');
                 var brickNodes = el.all('[bx-name]');
-                if (el.hasAttr('bx-name')) {
+                if(el.hasAttr('bx-name')) {
                     brickNodes = el.add(brickNodes);
                 }
-                self._addBehavior(brickNodes,function(bricks){
+                self._addBehavior(brickNodes, function(bricks) {
                     self.bricks = bricks;
                     self._fireReady();
-                    self.on('beforeRefreshTmpl',function(e){
-                        e.node.all('[bx-name]').each(function(node){
+                    self.on('beforeRefreshTmpl', function(e) {
+                        e.node.all('[bx-name]').each(function(node) {
                             self.destroyBrick(node.attr('id'));
                         });
                     });
-                    self.on('afterRefreshTmpl',function(e){
-                        self._addBehavior(e.node.all('[bx-name]'),function(newBricks){
-                            if(newBricks.length>0){
+                    self.on('afterRefreshTmpl', function(e) {
+                        self._addBehavior(e.node.all('[bx-name]'), function(newBricks) {
+                            if(newBricks.length > 0) {
                                 self.bricks = self.bricks.concat(newBricks);
                             }
                         });
@@ -118,52 +118,52 @@ KISSY.add("brix/core/pagelet", function(S, Chunk) {
          * @param {NodeList}   brickNodes 组件node对象集合
          * @param {Function} fn     实例化完成后的回调事件
          */
-        _addBehavior: function(brickNodes,fn) {
-            var self = this, bricks=[];
-            brickNodes.each(function(brickNode){
+        _addBehavior: function(brickNodes, fn) {
+            var self = this,
+                bricks = [];
+            brickNodes.each(function(brickNode) {
                 var id = _stamp(brickNode),
                     name = brickNode.attr('bx-name'),
                     path = brickNode.attr('bx-path'),
                     config = brickNode.attr('bx-config');
                 config = config ? (new Function("return " + config))() : {};
                 bricks.push({
-                    id :id,
-                    name:name,
+                    id: id,
+                    name: name,
                     path: path,
                     config: config
                 });
             });
 
             //构建pagelet需要引用组件js
-            if(bricks.length>0){
+            if(bricks.length > 0) {
                 var useList = [];
                 S.each(bricks, function(o) {
-                    if(!o.path){
-                        o.path = 'brix/gallery/'+o.name+'/';
+                    if(!o.path) {
+                        o.path = 'brix/gallery/' + o.name + '/';
                     }
-                    if(!S.inArray(useList,o.path)){
+                    if(!S.inArray(useList, o.path)) {
                         useList.push(o.path);
                     }
                 });
                 //实例化pagelet所有组件
-                S.use(useList.join(','),function(S){
+                S.use(useList.join(','), function(S) {
                     var useClassList = arguments;
                     S.each(bricks, function(o) {
                         var id = o.id;
                         var config = S.merge({
-                            container:'#'+id,
+                            container: '#' + id,
                             el: '#' + id,
                             pagelet: self
                         }, o.config);
-                        var TheBrick = useClassList[S.indexOf(o.path, useList)+1];
+                        var TheBrick = useClassList[S.indexOf(o.path, useList) + 1];
                         var myBrick = new TheBrick(config);
                         o.brick = myBrick;
                     });
                     useClassList = null;
                     fn(bricks);
                 });
-            }
-            else{
+            } else {
                 fn(bricks);
             }
 
@@ -174,7 +174,7 @@ KISSY.add("brix/core/pagelet", function(S, Chunk) {
          * @param {Function} fn 执行的函数
          */
         ready: function(fn) {
-            if (this.isReady) {
+            if(this.isReady) {
                 fn.call(window, this);
             } else {
                 this.readyList.push(fn);
@@ -186,13 +186,13 @@ KISSY.add("brix/core/pagelet", function(S, Chunk) {
          */
         _fireReady: function() {
             var self = this;
-            if (self.isReady) {
+            if(self.isReady) {
                 return;
             }
             self.isReady = true;
-            if (self.readyList) {
+            if(self.readyList) {
                 var fn, i = 0;
-                while (fn = self.readyList[i++]) {
+                while(fn = self.readyList[i++]) {
                     fn.call(self);
                 }
                 self.readyList = null;
@@ -204,38 +204,37 @@ KISSY.add("brix/core/pagelet", function(S, Chunk) {
          */
         destructor: function() {
             var self = this;
-            S.each(self.bricks, function(o,i) {
+            S.each(self.bricks, function(o, i) {
                 self._destroyBrick(o);
             });
             self.bricks = null;
-            if(self.get('rendered')&&self.get('isRemoveHTML')){
+            if(self.get('rendered') && self.get('isRemoveHTML')) {
                 var el = self.get('el');
-                if(self.get('isRemoveEl')){
+                if(self.get('isRemoveEl')) {
                     el.remove();
-                }
-                else{
+                } else {
                     el.empty();
                 }
                 el = null;
             }
         }
-    },{
-        ATTRS : {
-        /**
-         * 自动添加组件行为
-         * @cfg {Boolean}
-         */
-        autoBehavior:{
-            value:true 
-        },
-        /**
-         * 行为添加完成后的回调方法
-         * @cfg {Function}
-         */
-        callback:{
-            value:null
+    }, {
+        ATTRS: {
+            /**
+             * 自动添加组件行为
+             * @cfg {Boolean}
+             */
+            autoBehavior: {
+                value: true
+            },
+            /**
+             * 行为添加完成后的回调方法
+             * @cfg {Function}
+             */
+            callback: {
+                value: null
+            }
         }
-    }
     });
     return Pagelet;
 }, {
