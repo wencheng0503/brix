@@ -1,7 +1,7 @@
-KISSY.add("brix/core/tmpler", function(S, Mustache,Node) {
+KISSY.add("brix/core/tmpler", function(S, XTemplate,Node) {
     var $ = Node.all;
     /**
-     * 模板解析器，对传入的模板通过钩子进行分析，结合 Mustache 和数据给出 html 片段。
+     * 模板解析器，对传入的模板通过钩子进行分析，结合 XTemplate 和数据给出 html 片段。
      * @class Brix.Tmpler
      * @param {String}  tmpl    模板字符串
      * @param {Number} level    对模板进行解析的层级，false表示不解析
@@ -124,10 +124,10 @@ KISSY.add("brix/core/tmpler", function(S, Mustache,Node) {
          * @return {String}      html片段
          */
         to_html: function(data) {
-            return Mustache.to_html(this.getTmpl(), data);
+            return new XTemplate(this.getTmpl()).render(data);
         }
     });
     return Tmpler;
 }, {
-    requires: ['./mu','node', 'sizzle']
+    requires: ['xtemplate','node', 'sizzle']
 });

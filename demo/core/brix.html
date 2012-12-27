@@ -6,7 +6,7 @@
     <link type="text/css" rel="stylesheet" href="../../src/style/brix-min.css" charset="utf-8">
     <link type="text/css" rel="stylesheet" href="../../src/gallery/calendar/calendar.css" charset="utf-8">
     <link rel="stylesheet" href="../assets/doc.css">
-    <script src="http://a.tbcdn.cn/s/kissy/1.2.0/kissy.js"></script>
+    <script src="http://a.tbcdn.cn/s/kissy/1.3.0/seed.js"></script>
     <script src="../../src/core/brix.js" bx-config="{fixed:'src/'}"></script>
 </head>
 <body>
@@ -39,13 +39,7 @@
                 '#input4': {
                     click: function(e) {
                         var self = this;
-                        self.pagelet.setChunkData('d', [{
-                            d1: S.guid()
-                        }, {
-                            d1: S.guid()
-                        }, {
-                            d1: S.guid()
-                        }]);
+                        self.pagelet.setChunkData('d', [S.guid(),S.guid(),S.guid(),S.guid()]);
                     }
                 },
                 '#input5': {
@@ -67,14 +61,12 @@
             a: 'a',
             b: 'b',
             c: 'c',
-            d: [{
-                d1: '1'
-            }, {
-                d1: '2'
-            }, {
-                d1: '3'
-            }],
-            e:'e'
+            d: [1,2,3],
+            e:'e',
+            data: {
+                name: 'h',
+                age: 2
+            }
         }
     KISSY.ready(function(S){
         S.use('brix/core/pagelet',function(S,Pagelet){
@@ -100,23 +92,13 @@
                 sdaf
             </div>
             <div bx-tmpl="c" bx-datakey="a,c">
-                <!--bx-tmpl="c" bx-datakey="a,c"-->
                 <span>{{a}}-{{c}}</span>
-                <!--bx-tmpl="c"-->
             </div>
-            <div bx-tmpl="d" bx-datakey="d">
-                <table>
-                    <tbody>
-                    {{#d}}
-                        <tr>
-                            <td>{{d1}}<td>
-                        </tr>
-                    {{/d}}
-                    </tbody>
-                </table>
-            </div>
+
             <div bx-tmpl="e" bx-datakey="e" >
             <input type="text" value="{{e}}" />
+
+            {{#data}}{{name}}-{{a}}-{{age}}{{/data}}
             </div>
         </div>
     </script>
