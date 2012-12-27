@@ -186,15 +186,11 @@ KISSY.add('brix/gallery/calendar/index', function(S, Brick, Overlay, Page, Brix_
             value: false
         },
         tmpl: {
-            getter: function(v) {
-                S.log(v);
-                if(!v){
-                    var self = this;
-                    v = '<div class="calendar-pages"></div>' + '<div bx-tmpl="calendar" bx-datakey="notLimited,multiSelect,showTime,op_html" class="calendar-operator">{{{op_html}}}</div>';
-                    if(!self.get('el')){
-                        v = '<div class="calendar">' +v+ '</div>'
-                    }
-                    //this.set('tmpl',v);
+            valueFn: function() {
+                var self = this;
+                var v = '<div class="calendar-pages"></div>' + '<div bx-tmpl="calendar" bx-datakey="notLimited,multiSelect,showTime,op_html" class="calendar-operator">{{{op_html}}}</div>';
+                if(!self.get('el')){
+                    v = '<div class="calendar">' +v+ '</div>'
                 }
                 return v;
             }

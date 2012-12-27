@@ -14,43 +14,33 @@
     </div>
     <script type="text/javascript">
         KISSY.add("brixtest/index", function(S, Brick) {
-            function BrixTest() {
-                BrixTest.superclass.constructor.apply(this, arguments);
-            }
-            BrixTest.EVENTS = {
+            var BrixTest = Brick.extend({},{
+                EVENTS : {
                 '#input1': {
                     click: function(e) {
                         var self = this;
-                        self.pagelet.setChunkData('a', 'aaa'+S.guid());
+                        self.get('pagelet').setChunkData('a', 'aaa'+S.guid());
                     }
                 },
                 '#input2': {
                     click: function(e) {
                         var self = this;
-                        self.pagelet.setChunkData('b', 'bbb'+S.guid());
+                        self.get('pagelet').setChunkData('b', 'bbb'+S.guid());
                     }
                 },
                 '#input3': {
                     click: function(e) {
                         var self = this;
-                        self.pagelet.setChunkData('c', 'ccc'+S.guid());
+                        self.get('pagelet').setChunkData('c', 'ccc'+S.guid());
                     }
                 },
                 '#input4': {
                     click: function(e) {
                         var self = this;
-                        self.pagelet.setChunkData('d', [S.guid(),S.guid(),S.guid(),S.guid()]);
-                    }
-                },
-                '#input5': {
-                    click: function(e) {
-                        var self = this;
-                        self.pagelet.setChunkData('e', 'eee'+S.guid());
+                        self.get('pagelet').setChunkData('d', 'ddd'+S.guid());
                     }
                 }
             }
-            S.extend(BrixTest, Brick, {
-
             });
             return BrixTest;
         }, {
@@ -61,12 +51,7 @@
             a: 'a',
             b: 'b',
             c: 'c',
-            d: [1,2,3],
-            e:'e',
-            data: {
-                name: 'h',
-                age: 2
-            }
+            d:'d'
         }
     KISSY.ready(function(S){
         S.use('brix/core/pagelet',function(S,Pagelet){
@@ -80,13 +65,10 @@
             <input id="input2" type="button" value="局部刷新b">
             <input id="input3" type="button" value="局部刷新c">
             <input id="input4" type="button" value="局部刷新d">
-            <input id="input5" type="button" value="局部刷新e">
             <div id="xx" bx-tmpl="a" class="hahah" bx-datakey="a,b" name="xx">
                 <span>{{a}}</span>
                 <div bx-tmpl="b" bx-datakey="b">
                     <span>{{b}}</span>
-                    <div id="J_CalendarTest" bx-name="calendar" class="calendar" bx-config="{popup:false,autoRender:true}">
-                    </div>
                     dd
                 </div>
                 sdaf
@@ -95,10 +77,8 @@
                 <span>{{a}}-{{c}}</span>
             </div>
 
-            <div bx-tmpl="e" bx-datakey="e" >
-            <input type="text" value="{{e}}" />
-
-            {{#data}}{{name}}-{{a}}-{{age}}{{/data}}
+            <div bx-tmpl="d" bx-datakey="d" >
+            <input type="text" value="{{d}}" />
             </div>
         </div>
     </script>

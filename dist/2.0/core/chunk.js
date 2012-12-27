@@ -1,28 +1,6 @@
-KISSY.add("brix/core/chunk", function(S, Node, UA, Base, Dataset, Tmpler) {
-    var $ = Node.all;
-    /**
-     * Brix Chunk,Brick和Pagelet类的基类,
-     * 作为组件底层，完成渲染、数据更新、销毁操作，是模板解析器（Tmpler）和数据管理器（Dataset）的调度者。
-     * @extends KISSY.Base
-     * @class Brix.Chunk
-     */
-
-    function Chunk() {
-        Chunk.superclass.constructor.apply(this, arguments);
-        var self = this;
-        var tmpl = self.get('tmpl');
-        if(tmpl) {
-            self._buildTmpler(tmpl, self.get('level'));
-            var tmpler = self.get('tmpler');
-            if(tmpler) {
-                self._buildDataset(self.get('data'));
-                if(tmpler.inDom) {
-                    self.set('el', tmpl);
-                }
-            }
-        }
-    }
-
+KISSY.add("brix/core/chunk", function(S, Node, UA, RichBase, Dataset, Tmpler) {
+    var $ = Node.all,
+        noop = S.noop; 
     /**
      * The default set of attributes which will be available for instances of this class, and
      * their configuration
@@ -49,98 +27,45 @@ KISSY.add("brix/core/chunk", function(S, Node, UA, Base, Dataset, Tmpler) {
      * @type {Object}
      */
 
-    Chunk.ATTRS = {
-        /**
-         * 组件节点
-         * @cfg {String}
-         */
-        el: {
-            getter: function(s) {
-                if(S.isString(s)) {
-                    s = $(s);
-                }
-                return s;
+    /**
+     * Brix Chunk,Brick和Pagelet类的基类,
+     * 作为组件底层，完成渲染、数据更新、销毁操作，是模板解析器（Tmpler）和数据管理器（Dataset）的调度者。
+     * @extends KISSY.RichBase
+     * @class Brix.Chunk
+     */
+    var Chunk = RichBase.extend({
+        constructor: function Chunk() {
+            var self = this;
+            Chunk.superclass.constructor.apply(self, arguments);
+            var tmpler = self.get('tmpler');
+            if (self.get('autoRender')||!tmpler||tmpler.inDom) {
+                self.render();
             }
         },
-        /**
-         * 在销毁的时候是否移除HTML，默认true
-         * @cfg {Object}
-         */
-        isRemoveHTML: {
-            value: true
-        },
-        /**
-         * 在销毁的时候是否移除本身，默认true
-         * @cfg {Object}
-         */
-        isRemoveEl: {
-            value: true
-        },
-        /**
-         * 容器节点
-         * @cfg {String}
-         */
-        container: {
-            value: 'body',
-            getter: function(s) {
-                if(S.isString(s)) {
-                    s = $(s);
-                }
-                return s;
-            }
-        },
-        /**
-         * 模板代码，如果是已经渲染的html元素，则提供渲染html容器节点选择器
-         * @cfg {String}
-         */
-        tmpl: {
-            value: false
-        },
-        /**
-         * 解析后的模板对象
-         * @type {Brix.Tmpler}
-         */
-        tmpler: {
-            value: false
-        },
-        /**
-         * 是否已经渲染
-         * @type {Boolean}
-         */
-        rendered: {
-            value: false
-        },
-        /**
-         * 是否自动渲染
-         * @cfg {Boolean}
-         */
-        autoRender: {
-            value: true
-        },
-        /**
-         * 模板数据
-         * @cfg {Object}
-         */
-        data: {
-            value: false
-        },
-        /**
-         * 解析后的数据对象
-         * @type {Brix.Dataset}
-         */
-        dataset: {
-            value: false
-        },
-        /**
-         * 子模板解析的层级
-         * @cfg {Number}
-         */
-        level: {
-            value: 3
-        }
-    };
 
-    S.extend(Chunk, Base, {
+        // change routine from rich-base for uibase
+        bindInternal: noop,
+
+        // change routine from rich-base for uibase
+        syncInternal: noop,
+        /**
+         * 初始化
+         * @return {[type]} [description]
+         */
+        initializer: function () {
+            var self = this;
+            var tmpl = self.get('tmpl');
+            if(tmpl) {
+                self._buildTmpler(tmpl, self.get('level'));
+                var tmpler = self.get('tmpler');
+                if(tmpler) {
+                    self._buildDataset(self.get('data'));
+                    if(tmpler.inDom) {
+                        self.set('el', tmpl);
+                    }
+                }
+            }
+        },
         /**
          * 构建模板解析器
          * @param {String} tmpl 模板字符串
@@ -177,9 +102,8 @@ KISSY.add("brix/core/chunk", function(S, Node, UA, Base, Dataset, Tmpler) {
         },
         /**
          * 销毁tmpler和dataset
-         * @private
          */
-        _destroy: function() {
+        destructor: function() {
             var self = this,
                 tmpler = self.get('tmpler'),
                 dataset = self.get('dataset');
@@ -192,6 +116,26 @@ KISSY.add("brix/core/chunk", function(S, Node, UA, Base, Dataset, Tmpler) {
                 dataset.detach();
             }
         },
+        /**
+         * For overridden. Render logic of subclass component.
+         * @protected
+         * @method
+         */
+        renderUI: noop,
+
+        /**
+         * For overridden. Bind logic for subclass component.
+         * @protected
+         * @method
+         */
+        bindUI: noop,
+
+        /**
+         * For overridden. Sync attribute with ui.
+         * @protected
+         * @method
+         */
+        syncUI: noop,
 
         /**
          * 添加子模板
@@ -203,8 +147,10 @@ KISSY.add("brix/core/chunk", function(S, Node, UA, Base, Dataset, Tmpler) {
             var self = this;
             self._buildTmpler('', false);
             self._buildDataset();
-            var tmpler = self.get('tmpler');
-            tmpler.addTmpl(name, datakey, tmpl);
+            if(name){
+                var tmpler = self.get('tmpler');
+                tmpler.addTmpl(name, datakey, tmpl);
+            }
         },
 
         /**
@@ -214,7 +160,7 @@ KISSY.add("brix/core/chunk", function(S, Node, UA, Base, Dataset, Tmpler) {
          * @param {Object} [opts]    控制对象，包括以下控制选项
          * @param {Boolean} [opts.silent] 是否触发change事件
          */
-        setChunkData: function(datakey, data, opts) {
+        setData: function(datakey, data, opts) {
             var self = this,
                 dataset = self.get('dataset');
             if(dataset) {
@@ -228,13 +174,67 @@ KISSY.add("brix/core/chunk", function(S, Node, UA, Base, Dataset, Tmpler) {
         render: function() {
             var self = this;
             if(!self.get("rendered")) {
+                /**
+                 * @event beforeRenderUI
+                 * fired when root node is ready
+                 * @param {KISSY.Event.CustomEventObject} e
+                 */
+
+                self.fire('beforeRenderUI');
                 var dataset = self.get('dataset');
                 if(dataset) {
                     self._render('data', dataset.get('data'));
                 }
-                self.set("rendered", true);
-                self.fire('rendered');
+
+                /**
+                 * @event afterRenderUI
+                 * fired after root node is rendered into dom
+                 * @param {KISSY.Event.CustomEventObject} e
+                 */
+                self.fire('afterRenderUI');
+
+
+                self.setInternal("rendered", true);
+
+                /**
+                 * @event beforeBindUI
+                 * fired before component 's internal event is bind.
+                 * @param {KISSY.Event.CustomEventObject} e
+                 */
+
+                self.fire('beforeBindUI');
+                Chunk.superclass.bindInternal.call(self);
+                self.callMethodByHierarchy("bindUI", "__bindUI");
+
+                /**
+                 * @event afterBindUI
+                 * fired when component 's internal event is bind.
+                 * @param {KISSY.Event.CustomEventObject} e
+                 */
+
+                self.fire('afterBindUI');
+
+                /**
+                 * @event beforeSyncUI
+                 * fired before component 's internal state is synchronized.
+                 * @param {KISSY.Event.CustomEventObject} e
+                 */
+
+                self.fire('beforeSyncUI');
+
+                Chunk.superclass.syncInternal.call(self);
+                self.callMethodByHierarchy("syncUI", "__syncUI");
+
+                /**
+                 * @event afterSyncUI
+                 * fired after component 's internal state is synchronized.
+                 * @param {KISSY.Event.CustomEventObject} e
+                 */
+
+                self.fire('afterSyncUI');
+                
             }
+            return self;
         },
         /**
          * 将模板渲染到页面
@@ -342,12 +342,20 @@ KISSY.add("brix/core/chunk", function(S, Node, UA, Base, Dataset, Tmpler) {
                                     newData[k] = d;
                                 }
                             });
-                            //局部刷新前触发
+                            /**
+                             * @event beforeRefreshTmpl
+                             * 局部刷新前触发
+                             * @param {KISSY.Event.CustomEventObject} e
+                             */
                             self.fire('beforeRefreshTmpl', {
                                 node: node
                             });
                             node.html(S.trim(o.tmpler.to_html(newData)));
-                            //局部刷新后触发
+                            /**
+                             * @event beforeRefreshTmpl
+                             * 局部刷新后触发
+                             * @param {KISSY.Event.CustomEventObject} e
+                             */
                             self.fire('afterRefreshTmpl', {
                                 node: node
                             });
@@ -358,8 +366,99 @@ KISSY.add("brix/core/chunk", function(S, Node, UA, Base, Dataset, Tmpler) {
                 }
             });
         }
+    },{
+    ATTRS : {
+        /**
+         * 组件节点
+         * @cfg {String}
+         */
+        el: {
+            getter: function(s) {
+                if(S.isString(s)) {
+                    s = $(s);
+                }
+                return s;
+            }
+        },
+        /**
+         * 在销毁的时候是否移除HTML，默认true
+         * @cfg {Object}
+         */
+        isRemoveHTML: {
+            value: true
+        },
+        /**
+         * 在销毁的时候是否移除本身，默认true
+         * @cfg {Object}
+         */
+        isRemoveEl: {
+            value: true
+        },
+        /**
+         * 容器节点
+         * @cfg {String}
+         */
+        container: {
+            value: 'body',
+            getter: function(s) {
+                if(S.isString(s)) {
+                    s = $(s);
+                }
+                return s;
+            }
+        },
+        /**
+         * 模板代码，如果是已经渲染的html元素，则提供渲染html容器节点选择器
+         * @cfg {String}
+         */
+        tmpl: {
+            value: false
+        },
+        /**
+         * 解析后的模板对象
+         * @type {Brix.Tmpler}
+         */
+        tmpler: {
+            value: false
+        },
+        /**
+         * 是否已经渲染
+         * @type {Boolean}
+         */
+        rendered: {
+            value: false
+        },
+        /**
+         * 是否自动渲染
+         * @cfg {Boolean}
+         */
+        autoRender: {
+            value: true
+        },
+        /**
+         * 模板数据
+         * @cfg {Object}
+         */
+        data: {
+            value: false
+        },
+        /**
+         * 解析后的数据对象
+         * @type {Brix.Dataset}
+         */
+        dataset: {
+            value: false
+        },
+        /**
+         * 子模板解析的层级
+         * @cfg {Number}
+         */
+        level: {
+            value: 3
+        }
+    }
     });
     return Chunk;
 }, {
-    requires: ["node", 'ua', "base", "./dataset", "./tmpler"]
+    requires: ["node", 'ua', "rich-base", "./dataset", "./tmpler"]
 });

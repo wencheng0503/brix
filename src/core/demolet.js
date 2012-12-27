@@ -44,10 +44,8 @@ KISSY.add("brix/core/demolet", function(S, Pagelet,IO) {
      * @extends Brix.Pagelet
      * @class Brix.Demolet
      */
-    function Demolet() {
-        Demolet.superclass.constructor.apply(this, arguments);
-    }
-    Demolet.ATTRS = {
+    var Demolet = Pagelet.extend({},{
+        ATTRS : {
         /**
          * 分割符号
          * @cfg {String}
@@ -68,9 +66,7 @@ KISSY.add("brix/core/demolet", function(S, Pagelet,IO) {
                 return tmplData.tmpl;
             } 
         }
-    };
-    S.extend(Demolet, Pagelet, {
-        
+    }
     });
     return Demolet;
 }, {

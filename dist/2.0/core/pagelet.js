@@ -7,10 +7,12 @@ KISSY.add("brix/core/pagelet", function(S, Chunk) {
      * @ignore
      */
 
-    function _stamp(el, prefix) {
-        prefix = prefix || 'brick_';
+    function _stamp(el) {
         if (!el.attr('id')) {
-            el.attr('id', S.guid('brix_' + prefix));
+            var id;
+            while(id = S.guid('brix_brick_')&&!S.one('#'+id)){
+                el.attr('id', id);
+            }
         }
         return el.attr('id');
     }
@@ -21,47 +23,27 @@ KISSY.add("brix/core/pagelet", function(S, Chunk) {
      * @extends Brix.Chunk
      * @class Brix.Pagelet
      */
-    function Pagelet() {
-        Pagelet.superclass.constructor.apply(this, arguments);
-        var self = this;
-        //初始化属性
-        self.isReady = false;
-        self.readyList = [];
-        self.bricks = [];
-        self.isAddBehavior = false;
-        //如果是自动渲染，或者已经在dom中，则触发rendered事件
-        if (self.get('autoRender')||self.get('tmpler').inDom) {
-            self.on('rendered',function(){
-                //增加参数回调
-                var callback = self.get('callback');
-                if(callback&&typeof callback === 'function'){
-                    self.ready(callback);
-                }
-                //自动添加行为渲染
-                if(self.get('behavior')){
-                    self.addBehavior();
-                }
-            });
-            self.render();
-        }
-    }
-    Pagelet.ATTRS = {
-        /**
-         * 自动添加组件行为
-         * @cfg {Boolean}
-         */
-        behavior:{
-            value:true 
+    var Pagelet = Chunk.extend({
+        initializer:function(){
+            var self = this;
+            //初始化属性
+            self.isReady = false;
+            self.readyList = [];
+            self.bricks = [];
+            self.isAddBehavior = false;
         },
-        /**
-         * 行为添加完成后的回调方法
-         * @cfg {Function}
-         */
-        callback:{
-            value:null
-        }
-    };
-    S.extend(Pagelet, Chunk, {
+        bindUI:function(){
+            //增加参数回调
+            var self = this;
+            var callback = self.get('callback');
+            if(callback&&typeof callback === 'function'){
+                self.ready(callback);
+            }
+            //自动添加行为渲染
+            if(self.get('autoBehavior')){
+                self.addBehavior();
+            }
+        },
         /**
          * 获取brick的实例
          * @param  {String} id     brick的id
@@ -77,6 +59,28 @@ KISSY.add("brix/core/pagelet", function(S, Chunk) {
                 }
             });
             return brick || null;
+        },
+        destroyBrick:function(id){
+            var self = this;
+            for (var i = 0; i < self.bricks.length; i++) {
+                var o = self.bricks[i];
+                if(id===o.id){
+                    self._destroyBrick(o);
+                    self.bricks.splice(i,1);
+                    return false;
+                }
+            }
+        },
+        /**
+         * 销毁brick引用
+         * @param  {Object} o 需要销毁的对象
+         * @private
+         */
+        _destroyBrick: function(o) {
+            if (o.brick) {
+                o.brick.destroy&&o.brick.destroy();
+                o.brick = null;
+            }
         },
         /**
          * 给组件添加行为
@@ -95,7 +99,7 @@ KISSY.add("brix/core/pagelet", function(S, Chunk) {
                     self._fireReady();
                     self.on('beforeRefreshTmpl',function(e){
                         e.node.all('[bx-name]').each(function(node){
-                            self.destroy(node.attr('id'));
+                            self.destroyBrick(node.attr('id'));
                         });
                     });
                     self.on('afterRefreshTmpl',function(e){
@@ -198,48 +202,40 @@ KISSY.add("brix/core/pagelet", function(S, Chunk) {
          * 销毁组件或者pagelet
          * @param  {String} id 组件id,如果带了id，销毁组件
          */
-        destroy: function(id) {
+        destructor: function() {
             var self = this;
-            if(id){
-                for (var i = 0; i < self.bricks.length; i++) {
-                    var o = self.bricks[i];
-                    if(id===o.id){
-                        self._destroyBrick(o);
-                        self.bricks.splice(i,1);
-                        return false;
-                    }
+            S.each(self.bricks, function(o,i) {
+                self._destroyBrick(o);
+            });
+            self.bricks = null;
+            if(self.get('rendered')&&self.get('isRemoveHTML')){
+                var el = self.get('el');
+                if(self.get('isRemoveEl')){
+                    el.remove();
                 }
-            }
-            else{
-                self._destroy();
-                S.each(self.bricks, function(o,i) {
-                    self._destroyBrick(o);
-                });
-                self.bricks = null;
-                if(self.get('rendered')&&self.get('isRemoveHTML')){
-                    var el = self.get('el');
-                    if(self.get('isRemoveEl')){
-                        el.remove();
-                    }
-                    else{
-                        el.empty();
-                    }
-                    el = null;
+                else{
+                    el.empty();
                 }
-                self.detach();
-            }
-        },
-        /**
-         * 销毁brick引用
-         * @param  {Object} o 需要销毁的对象
-         * @private
-         */
-        _destroyBrick: function(o) {
-            if (o.brick) {
-                o.brick.destroy&&o.brick.destroy();
-                o.brick = null;
+                el = null;
             }
         }
+    },{
+        ATTRS : {
+        /**
+         * 自动添加组件行为
+         * @cfg {Boolean}
+         */
+        autoBehavior:{
+            value:true 
+        },
+        /**
+         * 行为添加完成后的回调方法
+         * @cfg {Function}
+         */
+        callback:{
+            value:null
+        }
+    }
     });
     return Pagelet;
 }, {
