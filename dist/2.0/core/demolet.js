@@ -71,7 +71,7 @@ KISSY.add("brix/core/demolet", function(S, Pagelet, IO) {
                 }
             }
         }
-    });
+    },'Demolet');
     return Demolet;
 }, {
     requires: ['./pagelet', 'ajax']

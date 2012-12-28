@@ -235,7 +235,7 @@ KISSY.add("brix/core/pagelet", function(S, Chunk) {
                 value: null
             }
         }
-    });
+    },'Pagelet');
     return Pagelet;
 }, {
     requires: ['./chunk']
