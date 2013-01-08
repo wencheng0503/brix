@@ -41,7 +41,6 @@ KISSY.add("brix/core/brick", function(S, Chunk, Event) {
                 }
                 constt = constt.superclass && constt.superclass.constructor;
             }
-            self._undelegateEvents();
             var events = self.get("events");
             if(events) {
                 this._removeEvents(events);

@@ -33,9 +33,9 @@
                 <div>{{{b}}}</div>
                 
                 <h1>不支持Array</h1>
-                {{#c}}
-                <div>{{.}}</div>
-                {{/c}}
+                {{#f}}
+                <div>{{this}}</div>
+                {{/f}}
                 <h1>不支持属性向上查找判断</h1>
                 {{#data}}{{name}}-{{b}}-{{age}}{{/data}}
             </div>

@@ -52,8 +52,7 @@ KISSY.add("brix/core/tmpler", function(S, XTemplate, Node) {
                 }
                 r = r.replace('@brix@', '(?:[\\s\\S]*?)');
                 self.reg = r;
-                //S.log(r);
-                self.tmpl = self._replaceTmpl(tmpl);
+                self.tmpl = tmpl;
                 self._buildTmpls(self.tmpl);
             }
             self.inDom = inDom;
@@ -76,27 +75,6 @@ KISSY.add("brix/core/tmpler", function(S, XTemplate, Node) {
                 self._buildTmpls(m[4]);
             }
         },
-        /**
-         * 移除子模板标签
-         * @param  {String} tmpl 需要替换的模板
-         * @return {String}      替换后的模板
-         * @private
-         */
-        _replaceTmpl: function(tmpl) {
-            //return tmpl;
-            var r = /<!--bx-tmpl="([^"]+?)"\s+bx-datakey="([^"]+?)"-->(\s*([\s\S]*)?\s*)<!--bx-tmpl="\1"-->/g,
-                m;
-            var foo = function(i, j, k, l) {
-                    S.log(i + ',' + l);
-                    return l;
-                };
-            while(r.test(tmpl)) {
-                tmpl = tmpl.replace(r, foo);
-                r.lastIndex = 0;
-            }
-            return tmpl;
-        },
-
         /**
          * 添加子模板
          * @param {String} name    模板名称

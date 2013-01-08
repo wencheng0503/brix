@@ -388,7 +388,7 @@ KISSY.add('brix/gallery/calendar/index', function(S, Brick, Overlay, Page, Brix_
     };
 
     S.extend(Calendar, Brick, {
-        initialize: function() {
+        bindUI: function() {
             var self = this,
                 popup = self.get('popup'),
                 closable = self.get('closable'),
@@ -519,7 +519,7 @@ KISSY.add('brix/gallery/calendar/index', function(S, Brick, Overlay, Page, Brix_
             self.on('after' + upperCaseKey + 'Change', function() {
                 var data = self.get(key);
                 for (var i = 0; i < self.pageBricks.length; i++) {
-                    self.pageBricks[i].setChunkData(key, data);
+                    self.pageBricks[i].setData(key, data);
                 };
             });
         },

@@ -51,7 +51,7 @@ KISSY.add('brix/gallery/datepicker/index', function(S, Brick, Overlay,Calendar) 
         var isCompare = self.get('isCompare');
         if(isCompare){
             self.on('afterCompareTextChange',function(ev){
-                self.setChunkData('compareText',self.get('compareText'));
+                self.setData('compareText',self.get('compareText'));
             })
         }
     }

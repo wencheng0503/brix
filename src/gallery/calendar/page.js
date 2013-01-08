@@ -315,7 +315,7 @@ KISSY.add('brix/gallery/calendar/page', function(S, Brick,Time,Brix_Date) {
         monthChange:'monthChange'
     };
     S.extend(Page, Brick, {
-        initialize: function() {
+        bindUI: function() {
             var self = this,
                 el = self.get('el'),
                 father = self.get('father'),
@@ -328,10 +328,10 @@ KISSY.add('brix/gallery/calendar/page', function(S, Brick,Time,Brix_Date) {
                 });
             }
             self.on('afterYearChange',function(){
-                self.setChunkData('year',self.get('year'));
+                self.setData('year',self.get('year'));
             });
             self.on('afterMonthChange',function(){
-                self.setChunkData('month',self.get('month')+1);
+                self.setData('month',self.get('month')+1);
             });
         },
         destructor: function() {
