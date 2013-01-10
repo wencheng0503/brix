@@ -77,10 +77,7 @@ KISSY.add("brix/core/demolet", function(S, Pagelet, IO, Node) {
      */
     var Demolet = Pagelet.extend({
         initializer: function() {
-
-
             var self = this;
-            S.log(self.getAttrVals());
             //在组件渲染前，加载所有的css
             self.on('beforeAddBehavior', function(ev) {
                 S.each(self.get('projectCss'), function(path) {
@@ -88,11 +85,11 @@ KISSY.add("brix/core/demolet", function(S, Pagelet, IO, Node) {
                 });
                 var useList = ev.useList;
                 S.each(useList, function(path) {
-                    if(S.startsWith('brix/')) {
-                        S.use(path + 'index.css');
+                    if(S.startsWith(path,'brix/')) {
+                        S.use(path + 'index.css');//核心组件采用模块方式加载
                     } else {
                         var length = 3;
-                        if(S.startsWith('imports/')) {
+                        if(S.startsWith(path,'imports/')) {
                             length = 4;
                         }
                         var arr = path.split('/');
@@ -113,7 +110,14 @@ KISSY.add("brix/core/demolet", function(S, Pagelet, IO, Node) {
              * @cfg {Array}
              */
             projectCss: {
-                value: ['styles/style.css']
+                value: [],
+                setter:function(v){
+                    if(S.isArray(v)){
+                        return v;
+                    }else{
+                        return [v];
+                    }
+                }
             },
             /**
              * 分割符号
