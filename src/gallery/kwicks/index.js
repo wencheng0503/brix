@@ -231,7 +231,7 @@ KISSY.add("brix/gallery/kwicks/index", function(S, Brick) {
     };
 
     S.extend(Kwicks, Brick, {
-        initialize: function() {
+        bindUI: function() {
             var self = this,
                 isVertical = self.get('isVertical'),
                 sticky = self.get('sticky'),
