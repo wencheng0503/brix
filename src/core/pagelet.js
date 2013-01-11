@@ -120,6 +120,7 @@ KISSY.add("brix/core/pagelet", function(S, Chunk) {
          */
         _addBehavior: function(brickNodes, fn) {
             var self = this,
+                bxConfig = self.get('config');
                 bricks = [];
             brickNodes.each(function(brickNode) {
                 var id = _stamp(brickNode),
@@ -127,6 +128,9 @@ KISSY.add("brix/core/pagelet", function(S, Chunk) {
                     path = brickNode.attr('bx-path'),
                     config = brickNode.attr('bx-config');
                 config = config ? (new Function("return " + config))() : {};
+                if(bxConfig[id]){
+                    S.mix(config,bxConfig[id]);
+                }
                 bricks.push({
                     id: id,
                     name: name,
@@ -234,6 +238,13 @@ KISSY.add("brix/core/pagelet", function(S, Chunk) {
              */
             callback: {
                 value: null
+            },
+            /**
+             * 增加pagelet对brick组件的配置增强,示例：{id:{xx:{},yy:{}}}
+             * @cfg {Object}
+             */
+            config:{
+                value:{}
             }
         }
     },'Pagelet');

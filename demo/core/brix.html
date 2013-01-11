@@ -14,7 +14,12 @@
     </div>
     <script type="text/javascript">
         KISSY.add("brixtest/index", function(S, Brick) {
-            var BrixTest = Brick.extend({},{
+            var BrixTest = Brick.extend({
+                initializer:function(){
+                    debugger
+                    S.log(this.get('b'));
+                }
+            },{
                 EVENTS : {
                 '#input1': {
                     click: function(e) {
@@ -55,12 +60,21 @@
         }
     KISSY.ready(function(S){
         S.use('brix/core/pagelet',function(S,Pagelet){
-            window.pagelet = new Pagelet({container:'.container',tmpl:'#tmpl',data:list});
+            window.pagelet = new Pagelet({
+                container:'.container',
+                tmpl:'#tmpl',
+                data:list,
+                config:{
+                    brixtest:{
+                        b:2
+                    }
+                }
+            });
         });
     })
     </script>
     <script type="text/tmpl" id="tmpl">
-        <div id="brixtest" bx-name="brixtest" bx-path="brixtest/">
+        <div id="brixtest" bx-name="brixtest" bx-path="brixtest/" bx-config="{a:1}">
             <input id="input1" type="button" value="局部刷新a">
             <input id="input2" type="button" value="局部刷新b">
             <input id="input3" type="button" value="局部刷新c">

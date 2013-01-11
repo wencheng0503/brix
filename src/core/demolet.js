@@ -93,6 +93,7 @@ KISSY.add("brix/core/demolet", function(S, Pagelet, IO, Node) {
                             length = 4;
                         }
                         var arr = path.split('/');
+                        path = arr.splice()
                         if(arr.length > length) {
                             arr.splice(arr.length - 2);
                             loadCSS(arr.join('/') + '/index.css');
