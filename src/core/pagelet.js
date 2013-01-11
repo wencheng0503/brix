@@ -128,7 +128,7 @@ KISSY.add("brix/core/pagelet", function(S, Chunk) {
                     path = brickNode.attr('bx-path'),
                     config = brickNode.attr('bx-config');
                 config = config ? (new Function("return " + config))() : {};
-                if(bxConfig[id]){
+                if(bxConfig&&bxConfig[id]){
                     S.mix(config,bxConfig[id]);
                 }
                 bricks.push({
