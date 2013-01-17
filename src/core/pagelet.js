@@ -10,9 +10,10 @@ KISSY.add("brix/core/pagelet", function(S, Chunk) {
     function _stamp(el) {
         if(!el.attr('id')) {
             var id;
-            while(id = S.guid('brix_brick_') && !S.one('#' + id)) {
-                el.attr('id', id);
+            while((id =  S.guid('brix_brick_'))&&S.one('#' + id)) {
+
             }
+            el.attr('id',id);
         }
         return el.attr('id');
     }

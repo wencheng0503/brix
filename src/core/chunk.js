@@ -159,7 +159,7 @@ KISSY.add("brix/core/chunk", function(S, Node, UA, RichBase, Dataset, Tmpler) {
          * @param {Object} [opts]    控制对象，包括以下控制选项
          * @param {Boolean} [opts.silent] 是否触发change事件
          */
-        setData: function(datakey, data, opts) {
+        setChunkData: function(datakey, data, opts) {
             var self = this,
                 dataset = self.get('dataset');
             if(dataset) {
@@ -204,6 +204,9 @@ KISSY.add("brix/core/chunk", function(S, Node, UA, RichBase, Dataset, Tmpler) {
                 self.fire('beforeBindUI');
                 Chunk.superclass.bindInternal.call(self);
                 self.callMethodByHierarchy("bindUI", "__bindUI");
+                
+                //兼容老的brix render后的初始化函数
+                self.callMethodByHierarchy("initialize", "constructor");
 
                 /**
                  * @event afterBindUI
